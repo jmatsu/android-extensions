@@ -9,26 +9,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0bfdc513-f276-4370-8945-80844f528156" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/src/main/kotlin/com/fatdaruma/androidextension/BundleExtensions.kt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/src/main/kotlin/com/fatdaruma/androidextension/FragmentExtensions.kt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sample/src/main/kotlin/com/fatdaruma/extensionsample/MainActivity.kt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sample/src/main/kotlin/com/fatdaruma/extensionsample/MainFragment.kt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/src/main/kotlin/com/fatdaruma/androidextension/ViewExtensions.kt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/animated_vector_drawable_23_2_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_23_2_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sample/src/main/res/layout/fragment_main.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/kotlin_runtime_1_0_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/kotlin_stdlib_1_0_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/support_annotations_23_2_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_23_2_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/support_vector_drawable_23_2_0.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/sample/src/main/java/com/fatdaruma/extensionsample/MainActivity.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sample/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/sample/src/main/res/layout/activity_main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build.gradle" afterPath="$PROJECT_DIR$/library/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sample/build.gradle" afterPath="$PROJECT_DIR$/sample/build.gradle" />
-    </list>
+    <list default="true" id="0bfdc513-f276-4370-8945-80844f528156" name="Default" comment="" />
     <ignored path="ExtensionSample.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -57,10 +38,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ViewExtensions.kt" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ViewExtensions.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/library/src/main/kotlin/com/fatdaruma/androidextension/ViewExtensions.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5109489">
+            <state vertical-scroll-proportion="0.0">
               <caret line="14" column="3" selection-start-line="14" selection-start-column="3" selection-end-line="14" selection-end-column="3" />
               <folding>
                 <element signature="e#0#594#0" expanded="true" />
@@ -73,7 +54,7 @@
         <entry file="file://$PROJECT_DIR$/library/src/main/kotlin/com/fatdaruma/androidextension/FragmentExtensions.kt">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="64" column="151" selection-start-line="64" selection-start-column="151" selection-end-line="64" selection-end-column="151" />
+              <caret line="49" column="61" selection-start-line="49" selection-start-column="61" selection-end-line="49" selection-end-column="61" />
               <folding>
                 <element signature="e#0#594#0" expanded="true" />
                 <element signature="e#668#1105#0" expanded="true" />
@@ -107,13 +88,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainFragment.kt" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MainFragment.kt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sample/src/main/kotlin/com/fatdaruma/extensionsample/MainFragment.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="40" column="42" selection-start-line="40" selection-start-column="42" selection-end-line="40" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.4452555">
+              <caret line="28" column="4" selection-start-line="28" selection-start-column="4" selection-end-line="28" selection-end-column="68" />
               <folding>
-                <marker date="1459961034000" expanded="true" signature="46:411" placeholder="..." />
+                <element signature="e#39#411#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -3217,10 +3198,39 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-23/android/widget/ImageView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.32846716">
+          <caret line="84" column="40" selection-start-line="84" selection-start-column="40" selection-end-line="84" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/src/main/kotlin/com/fatdaruma/androidextension/BundleExtensions.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.0">
+          <caret line="30" column="112" selection-start-line="30" selection-start-column="112" selection-end-line="30" selection-end-column="112" />
+          <folding>
+            <element signature="e#0#594#0" expanded="true" />
+            <element signature="e#666#858#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/src/main/kotlin/com/fatdaruma/androidextension/ViewExtensions.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="3" selection-start-line="14" selection-start-column="3" selection-end-line="14" selection-end-column="3" />
+          <folding>
+            <element signature="e#0#594#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/library/src/main/kotlin/com/fatdaruma/androidextension/FragmentExtensions.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="64" column="151" selection-start-line="64" selection-start-column="151" selection-end-line="64" selection-end-column="151" />
+          <caret line="49" column="61" selection-start-line="49" selection-start-column="61" selection-end-line="49" selection-end-column="61" />
           <folding>
             <element signature="e#0#594#0" expanded="true" />
             <element signature="e#668#1105#0" expanded="true" />
@@ -3230,39 +3240,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sample/src/main/kotlin/com/fatdaruma/extensionsample/MainFragment.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="40" column="42" selection-start-line="40" selection-start-column="42" selection-end-line="40" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.4452555">
+          <caret line="28" column="4" selection-start-line="28" selection-start-column="4" selection-end-line="28" selection-end-column="68" />
           <folding>
-            <marker date="1459961034000" expanded="true" signature="46:411" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/src/main/kotlin/com/fatdaruma/androidextension/BundleExtensions.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.37956205">
-          <caret line="71" column="46" selection-start-line="71" selection-start-column="46" selection-end-line="71" selection-end-column="46" />
-          <folding>
-            <element signature="e#0#594#0" expanded="true" />
-            <element signature="e#666#858#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-23/android/widget/ImageView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32846716">
-          <caret line="84" column="40" selection-start-line="84" selection-start-column="40" selection-end-line="84" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/src/main/kotlin/com/fatdaruma/androidextension/ViewExtensions.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5109489">
-          <caret line="14" column="3" selection-start-line="14" selection-start-column="3" selection-end-line="14" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#594#0" expanded="true" />
+            <element signature="e#39#411#0" expanded="true" />
           </folding>
         </state>
       </provider>

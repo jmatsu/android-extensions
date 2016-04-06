@@ -1,5 +1,15 @@
 # Kotlin Extensions for Android
 
+## Existing extensions
+
++ Bundle extensions. : Some operators will be added to Bundle.
++ Fragment extensions. : Easy to manage arguments.
++ View extensions. : Safe cast without specifying type
+
+## Samples
+
+See [samples](https://github.com/jmatsu/android-extensions/blob/master/sample/src/main/kotlin/com/fatdaruma/extensionsample/MainFragment.kt).
+
 ## Download
 
 To add this to your project, append the following to your `build.gradle`
