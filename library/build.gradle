@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.github.dcendents.android-maven'
 
 def versionMajor = 0
 def versionMinor = 0
@@ -9,7 +11,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        minSdkVersion minSdkVersion
+        minSdkVersion 15
         targetSdkVersion baseSdkVersion
         versionCode versionMajor * 100 + versionMinor * 10 + versionPatch
         versionName "$versionMajor.$versionMinor.$versionPatch"
@@ -41,6 +43,9 @@ android {
 }
 
 dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "com.android.support:appcompat-v7:$supportLibVersion"
+
     // test compiles
     testCompile "junit:junit:$junitVersion"
     testCompile "org.robolectric:robolectric:$robolectricVersion"
