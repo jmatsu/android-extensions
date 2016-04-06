@@ -1,14 +1,17 @@
 # Kotlin Extensions for Android
 
+## Usage
+
+See [samples](https://github.com/jmatsu/android-extensions/blob/master/sample/src/main/kotlin/com/fatdaruma/extensionsample/MainFragment.kt).
+
+*From Java*, you can use this as utilities.  
+If `FooExtensions` exists, *Java* treats it as `FooUtils`.
+
 ## Existing extensions
 
 + Bundle extensions. : Some operators will be added to Bundle.
 + Fragment extensions. : Easy to manage arguments.
 + View extensions. : Safe cast without specifying type
-
-## Samples
-
-See [samples](https://github.com/jmatsu/android-extensions/blob/master/sample/src/main/kotlin/com/fatdaruma/extensionsample/MainFragment.kt).
 
 ## Download
 

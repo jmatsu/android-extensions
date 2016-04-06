@@ -28,7 +28,7 @@ import java.util.*
 
 operator fun Bundle.contains(key: String) = containsKey(key)
 
-inline fun <reified R> Bundle.obtain(key: String, noinline converter: ((Any) -> R) = { it as R }): R = converter(this[key])
+inline fun <reified T> Bundle.obtain(key: String, noinline converter: ((Any) -> T) = { it as T }): T = converter(this[key])
 
 operator inline fun <reified T> Bundle.set(key: String, value: T) {
     when (value) {
@@ -53,14 +53,14 @@ operator inline fun <reified T> Bundle.set(key: String, value: T) {
 
 operator inline fun <reified T> Bundle.set(key: String, value: Array<T>) {
     when (T::class) {
-        Boolean::class -> value.map { it as Boolean }.toBooleanArray()
-        Int::class -> value.map { it as Int }.toIntArray()
-        Long::class -> value.map { it as Long }.toLongArray()
-        Float::class -> value.map { it as Float }.toFloatArray()
-        Double::class -> value.map { it as Double }.toDoubleArray()
-        Byte::class -> value.map { it as Byte }.toByteArray()
-        Short::class -> value.map { it as Short }.toShortArray()
-        Char::class -> value.map { it as Char }.toCharArray()
+        Boolean::class -> putBooleanArray(key ,value.map { it as Boolean }.toBooleanArray())
+        Int::class -> putIntArray(key, value.map { it as Int }.toIntArray())
+        Long::class -> putLongArray(key, value.map { it as Long }.toLongArray())
+        Float::class -> putFloatArray(key, value.map { it as Float }.toFloatArray())
+        Double::class -> putDoubleArray(key, value.map { it as Double }.toDoubleArray())
+        Byte::class -> putByteArray(key, value.map { it as Byte }.toByteArray())
+        Short::class -> putShortArray(key, value.map { it as Short }.toShortArray())
+        Char::class -> putCharArray(key, value.map { it as Char }.toCharArray())
         String::class -> putStringArray(key, value.map { it as String }.toTypedArray())
         CharSequence::class -> putCharSequenceArray(key, value.map { it as CharSequence }.toTypedArray())
         else -> throw IllegalArgumentException("Cannot accept the given value. -> $value")
