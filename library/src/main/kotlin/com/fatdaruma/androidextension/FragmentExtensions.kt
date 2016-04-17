@@ -21,6 +21,7 @@ package com.fatdaruma.androidextension
 import android.app.DialogFragment
 import android.app.Fragment
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.annotation.ColorRes
 import android.support.annotation.DimenRes
 import android.support.annotation.StringRes
@@ -42,37 +43,95 @@ fun Fragment.getDimensionPixelSize(@DimenRes resId: Int): Int = resources.getDim
 fun SupportFragment.getDimensionPixelSize(@DimenRes resId: Int): Int = resources.getDimensionPixelSize(resId)
 
 fun SupportFragment.invalidateOptionsMenu() {
-    activity ?: return
+    val activity = activity ?: return
     ActivityCompat.invalidateOptionsMenu(activity)
 }
 
 inline fun <reified T> T.showDialog(dialog: DialogFragment) where T : Fragment {
-    dialog.show(fragmentManager, dialog.javaClass.simpleName)
+    dialog.show(fragmentManager, dialog.javaClass.canonicalName)
 }
 
 inline fun <reified T> T.showDialog(dialog: SupportDialogFragment) where T : SupportFragment {
-    dialog.show(childFragmentManager, dialog.javaClass.simpleName)
+    dialog.show(childFragmentManager, dialog.javaClass.canonicalName)
 }
 
-inline fun <reified T> T.initArguments(f: Bundle.() -> Unit) : T where T : Fragment = apply {
+inline fun <reified T> T.initArguments(f: Bundle.() -> Unit): T where T : Fragment = apply {
     arguments = Bundle().apply(f)
 }
 
-inline fun <reified T> T.initArguments(f: Bundle.() -> Unit) : T where T : SupportFragment = apply {
+inline fun <reified T> T.initArguments(f: Bundle.() -> Unit): T where T : SupportFragment = apply {
     arguments = Bundle().apply(f)
 }
 
-inline fun <reified T> Fragment.bindArgs(key: String, noinline converter: ((Any) -> T) = { it as T }): Lazy<T> = lazy { getArgs(this, key, converter) }
-inline fun <reified T> android.support.v4.app.Fragment.bindArgs(key: String, noinline converter: ((Any) -> T) = { it as T }): Lazy<T> = lazy { getArgs(this, key, converter) }
+inline fun <reified T> Fragment.bindArgs(key: String, noinline transformer: ((Any) -> T) = { it as T }): Lazy<T> =
+        lazy { getArgs(this, key, transformer) }
 
-inline fun <reified T : Any?> getArgs(thisRef: Any, key: String, noinline converter: ((Any) -> T)): T = run {
-    converter(when (thisRef) {
-        is Fragment -> {
-            thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key")
-        }
-        is SupportFragment -> {
-            thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key")
-        }
-        else -> throw IllegalStateException("Only allowed Fragment and SupportFragment")
-    })
-}
+inline fun <reified T> SupportFragment.bindArgs(key: String, noinline transformer: ((Any) -> T) = { it as T }): Lazy<T> =
+        lazy { getArgs(this, key, transformer) }
+
+
+fun Fragment.bindString(key: String): Lazy<String> = bindArgs(key)
+fun SupportFragment.bindString(key: String): Lazy<String> = bindArgs(key)
+
+fun Fragment.bindBoolean(key: String): Lazy<Boolean> = bindArgs(key)
+fun SupportFragment.bindBoolean(key: String): Lazy<Boolean> = bindArgs(key)
+
+fun Fragment.bindInt(key: String): Lazy<Int> = bindArgs(key)
+fun SupportFragment.bindInt(key: String): Lazy<Int> = bindArgs(key)
+
+fun Fragment.bindLong(key: String): Lazy<Long> = bindArgs(key)
+fun SupportFragment.bindLong(key: String): Lazy<Long> = bindArgs(key)
+
+fun Fragment.bindDouble(key: String): Lazy<Double> = bindArgs(key)
+fun SupportFragment.bindDouble(key: String): Lazy<Double> = bindArgs(key)
+
+fun Fragment.bindFloat(key: String): Lazy<Float> = bindArgs(key)
+fun SupportFragment.bindFloat(key: String): Lazy<Float> = bindArgs(key)
+
+fun Fragment.bindByte(key: String): Lazy<Byte> = bindArgs(key)
+fun SupportFragment.bindByte(key: String): Lazy<Byte> = bindArgs(key)
+
+fun Fragment.bindShort(key: String): Lazy<Short> = bindArgs(key)
+fun SupportFragment.bindShort(key: String): Lazy<Short> = bindArgs(key)
+
+fun Fragment.bindChar(key: String): Lazy<Char> = bindArgs(key)
+fun SupportFragment.bindChar(key: String): Lazy<Char> = bindArgs(key)
+
+fun Fragment.bindCharSequence(key: String): Lazy<CharSequence> = bindArgs(key)
+fun SupportFragment.bindCharSequence(key: String): Lazy<CharSequence> = bindArgs(key)
+
+fun Fragment.bindBundle(key: String): Lazy<Bundle> = bindArgs(key)
+fun SupportFragment.bindBundle(key: String): Lazy<Bundle> = bindArgs(key)
+
+fun Fragment.bindParcelable(key: String): Lazy<Parcelable> = bindArgs(key)
+fun SupportFragment.bindParcelable(key: String): Lazy<Parcelable> = bindArgs(key)
+
+fun Fragment.bindResourceString(key: String): Lazy<String> =
+        lazy { getString(getArgs(this, key, { it as Int })) }
+
+fun SupportFragment.bindResourceString(key: String): Lazy<String> =
+        lazy { getString(getArgs(this, key, { it as Int })) }
+
+fun Fragment.bindResourceColor(key: String): Lazy<Int> =
+        lazy { getColor(getArgs(this, key, { it as Int })) }
+
+fun SupportFragment.bindResourceColor(key: String): Lazy<Int> =
+        lazy { getColor(getArgs(this, key, { it as Int })) }
+
+fun Fragment.bindResourceDimensionPixelSize(key: String): Lazy<Int> =
+        lazy { getDimensionPixelSize(getArgs(this, key, { it as Int })) }
+
+fun SupportFragment.bindResourceDimensionPixelSize(key: String): Lazy<Int> =
+        lazy { getDimensionPixelSize(getArgs(this, key, { it as Int })) }
+
+inline fun <reified T : Any?> getArgs(thisRef: Fragment, key: String, noinline transformer: ((Any) -> T)): T =
+        transformer(
+                thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key")
+        )
+
+
+inline fun <reified T : Any?> getArgs(thisRef: SupportFragment, key: String, noinline transformer: ((Any) -> T)): T =
+        transformer(
+                thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key")
+        )
+
