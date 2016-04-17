@@ -42,37 +42,47 @@ fun Fragment.getDimensionPixelSize(@DimenRes resId: Int): Int = resources.getDim
 fun SupportFragment.getDimensionPixelSize(@DimenRes resId: Int): Int = resources.getDimensionPixelSize(resId)
 
 fun SupportFragment.invalidateOptionsMenu() {
-    activity ?: return
+    val activity = activity ?: return
     ActivityCompat.invalidateOptionsMenu(activity)
 }
 
 inline fun <reified T> T.showDialog(dialog: DialogFragment) where T : Fragment {
-    dialog.show(fragmentManager, dialog.javaClass.simpleName)
+    dialog.show(fragmentManager, dialog.javaClass.canonicalName)
 }
 
 inline fun <reified T> T.showDialog(dialog: SupportDialogFragment) where T : SupportFragment {
-    dialog.show(childFragmentManager, dialog.javaClass.simpleName)
+    dialog.show(childFragmentManager, dialog.javaClass.canonicalName)
 }
 
-inline fun <reified T> T.initArguments(f: Bundle.() -> Unit) : T where T : Fragment = apply {
+inline fun <reified T> T.initArguments(f: Bundle.() -> Unit): T where T : Fragment = apply {
     arguments = Bundle().apply(f)
 }
 
-inline fun <reified T> T.initArguments(f: Bundle.() -> Unit) : T where T : SupportFragment = apply {
+inline fun <reified T> T.initArguments(f: Bundle.() -> Unit): T where T : SupportFragment = apply {
     arguments = Bundle().apply(f)
 }
 
-inline fun <reified T> Fragment.bindArgs(key: String, noinline converter: ((Any) -> T) = { it as T }): Lazy<T> = lazy { getArgs(this, key, converter) }
-inline fun <reified T> android.support.v4.app.Fragment.bindArgs(key: String, noinline converter: ((Any) -> T) = { it as T }): Lazy<T> = lazy { getArgs(this, key, converter) }
+inline fun <reified T> Fragment.bindArgs(key: String, noinline transformer: ((Any) -> T) = { it as T }): Lazy<T> = lazyOf(getArgs(this, key, transformer))
 
-inline fun <reified T : Any?> getArgs(thisRef: Any, key: String, noinline converter: ((Any) -> T)): T = run {
-    converter(when (thisRef) {
-        is Fragment -> {
-            thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key")
-        }
-        is SupportFragment -> {
-            thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key")
-        }
-        else -> throw IllegalStateException("Only allowed Fragment and SupportFragment")
-    })
-}
+inline fun <reified T> SupportFragment.bindArgs(key: String, noinline transformer: ((Any) -> T) = { it as T }): Lazy<T> = lazyOf(getArgs(this, key, transformer))
+
+fun Fragment.bindResourceIdentifier(key: String): Lazy<Int> = bindArgs(key)
+fun SupportFragment.bindResourceIdentifier(key: String): Lazy<Int> = bindArgs(key)
+
+fun Fragment.bindResourceString(key: String): Lazy<String> =
+        lazyOf(getString(getArgs(this, key, { it as Int })))
+
+fun SupportFragment.bindResourceString(key: String): Lazy<String> =
+        lazyOf(getString(getArgs(this, key, { it as Int })))
+
+inline fun <reified T : Any?> getArgs(thisRef: Fragment, key: String, noinline transformer: ((Any) -> T)): T =
+        transformer(
+                thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key")
+        )
+
+
+inline fun <reified T : Any?> getArgs(thisRef: SupportFragment, key: String, noinline transformer: ((Any) -> T)): T =
+        transformer(
+                thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key")
+        )
+
