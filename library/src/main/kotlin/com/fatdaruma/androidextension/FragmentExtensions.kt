@@ -21,6 +21,7 @@ package com.fatdaruma.androidextension
 import android.app.DialogFragment
 import android.app.Fragment
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.annotation.ColorRes
 import android.support.annotation.DimenRes
 import android.support.annotation.StringRes
@@ -62,18 +63,66 @@ inline fun <reified T> T.initArguments(f: Bundle.() -> Unit): T where T : Suppor
     arguments = Bundle().apply(f)
 }
 
-inline fun <reified T> Fragment.bindArgs(key: String, noinline transformer: ((Any) -> T) = { it as T }): Lazy<T> = lazyOf(getArgs(this, key, transformer))
+inline fun <reified T> Fragment.bindArgs(key: String, noinline transformer: ((Any) -> T) = { it as T }): Lazy<T> =
+        lazy { getArgs(this, key, transformer) }
 
-inline fun <reified T> SupportFragment.bindArgs(key: String, noinline transformer: ((Any) -> T) = { it as T }): Lazy<T> = lazyOf(getArgs(this, key, transformer))
+inline fun <reified T> SupportFragment.bindArgs(key: String, noinline transformer: ((Any) -> T) = { it as T }): Lazy<T> =
+        lazy { getArgs(this, key, transformer) }
 
-fun Fragment.bindResourceIdentifier(key: String): Lazy<Int> = bindArgs(key)
-fun SupportFragment.bindResourceIdentifier(key: String): Lazy<Int> = bindArgs(key)
+
+fun Fragment.bindString(key: String): Lazy<String> = bindArgs(key)
+fun SupportFragment.bindString(key: String): Lazy<String> = bindArgs(key)
+
+fun Fragment.bindBoolean(key: String): Lazy<Boolean> = bindArgs(key)
+fun SupportFragment.bindBoolean(key: String): Lazy<Boolean> = bindArgs(key)
+
+fun Fragment.bindInt(key: String): Lazy<Int> = bindArgs(key)
+fun SupportFragment.bindInt(key: String): Lazy<Int> = bindArgs(key)
+
+fun Fragment.bindLong(key: String): Lazy<Long> = bindArgs(key)
+fun SupportFragment.bindLong(key: String): Lazy<Long> = bindArgs(key)
+
+fun Fragment.bindDouble(key: String): Lazy<Double> = bindArgs(key)
+fun SupportFragment.bindDouble(key: String): Lazy<Double> = bindArgs(key)
+
+fun Fragment.bindFloat(key: String): Lazy<Float> = bindArgs(key)
+fun SupportFragment.bindFloat(key: String): Lazy<Float> = bindArgs(key)
+
+fun Fragment.bindByte(key: String): Lazy<Byte> = bindArgs(key)
+fun SupportFragment.bindByte(key: String): Lazy<Byte> = bindArgs(key)
+
+fun Fragment.bindShort(key: String): Lazy<Short> = bindArgs(key)
+fun SupportFragment.bindShort(key: String): Lazy<Short> = bindArgs(key)
+
+fun Fragment.bindChar(key: String): Lazy<Char> = bindArgs(key)
+fun SupportFragment.bindChar(key: String): Lazy<Char> = bindArgs(key)
+
+fun Fragment.bindCharSequence(key: String): Lazy<CharSequence> = bindArgs(key)
+fun SupportFragment.bindCharSequence(key: String): Lazy<CharSequence> = bindArgs(key)
+
+fun Fragment.bindBundle(key: String): Lazy<Bundle> = bindArgs(key)
+fun SupportFragment.bindBundle(key: String): Lazy<Bundle> = bindArgs(key)
+
+fun Fragment.bindParcelable(key: String): Lazy<Parcelable> = bindArgs(key)
+fun SupportFragment.bindParcelable(key: String): Lazy<Parcelable> = bindArgs(key)
 
 fun Fragment.bindResourceString(key: String): Lazy<String> =
-        lazyOf(getString(getArgs(this, key, { it as Int })))
+        lazy { getString(getArgs(this, key, { it as Int })) }
 
 fun SupportFragment.bindResourceString(key: String): Lazy<String> =
-        lazyOf(getString(getArgs(this, key, { it as Int })))
+        lazy { getString(getArgs(this, key, { it as Int })) }
+
+fun Fragment.bindResourceColor(key: String): Lazy<Int> =
+        lazy { getColor(getArgs(this, key, { it as Int })) }
+
+fun SupportFragment.bindResourceColor(key: String): Lazy<Int> =
+        lazy { getColor(getArgs(this, key, { it as Int })) }
+
+fun Fragment.bindResourceDimensionPixelSize(key: String): Lazy<Int> =
+        lazy { getDimensionPixelSize(getArgs(this, key, { it as Int })) }
+
+fun SupportFragment.bindResourceDimensionPixelSize(key: String): Lazy<Int> =
+        lazy { getDimensionPixelSize(getArgs(this, key, { it as Int })) }
 
 inline fun <reified T : Any?> getArgs(thisRef: Fragment, key: String, noinline transformer: ((Any) -> T)): T =
         transformer(
