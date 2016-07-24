@@ -48,11 +48,11 @@ fun SupportFragment.invalidateOptionsMenu() {
 }
 
 inline fun <reified T> T.showDialog(dialog: DialogFragment) where T : Fragment {
-    dialog.show(fragmentManager, dialog.javaClass.canonicalName)
+    dialog.show(fragmentManager, dialog.javaClass.name)
 }
 
 inline fun <reified T> T.showDialog(dialog: SupportDialogFragment) where T : SupportFragment {
-    dialog.show(childFragmentManager, dialog.javaClass.canonicalName)
+    dialog.show(childFragmentManager, dialog.javaClass.name)
 }
 
 inline fun <reified T> T.initArguments(f: Bundle.() -> Unit): T where T : Fragment = apply {
