@@ -70,6 +70,19 @@ inline fun <reified T> SupportFragment.bindArgs(key: String, noinline transforme
         lazy { getArgs(this, key, transformer) }
 
 
+inline fun <reified T> Fragment.bindOptionArgs(key: String, noinline transformer: ((Any?) -> T?) = { it as? T }): Lazy<T?> =
+        lazy { getOptionArgs(this, key, transformer) }
+
+inline fun <reified T> SupportFragment.bindOptionArgs(key: String, noinline transformer: ((Any?) -> T?) = { it as? T }): Lazy<T?> =
+        lazy { getOptionArgs(this, key, transformer) }
+
+inline fun <reified T> Fragment.bindArgsIfExist(key: String, noinline transformer: ((Any) -> T?) = { it as? T }): Lazy<T?> =
+        lazy { getArgsIfExist(this, key, transformer) }
+
+inline fun <reified T> SupportFragment.bindArgsIfExist(key: String, noinline transformer: ((Any) -> T?) = { it as? T }): Lazy<T?> =
+        lazy { getArgsIfExist(this, key, transformer) }
+
+
 fun Fragment.bindString(key: String): Lazy<String> = bindArgs(key)
 fun SupportFragment.bindString(key: String): Lazy<String> = bindArgs(key)
 
@@ -125,13 +138,23 @@ fun SupportFragment.bindResourceDimensionPixelSize(key: String): Lazy<Int> =
         lazy { getDimensionPixelSize(getArgs(this, key, { it as Int })) }
 
 inline fun <reified T : Any?> getArgs(thisRef: Fragment, key: String, noinline transformer: ((Any) -> T)): T =
-        transformer(
-                thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key")
-        )
+        transformer(thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key"))
 
 
 inline fun <reified T : Any?> getArgs(thisRef: SupportFragment, key: String, noinline transformer: ((Any) -> T)): T =
-        transformer(
-                thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key")
-        )
+        transformer(thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key"))
+
+inline fun <reified T : Any?> getOptionArgs(thisRef: Fragment, key: String, noinline transformer: ((Any?) -> T?)): T? =
+        transformer(thisRef.arguments[key])
+
+
+inline fun <reified T : Any?> getOptionArgs(thisRef: SupportFragment, key: String, noinline transformer: ((Any?) -> T?)): T? =
+        transformer(thisRef.arguments[key])
+
+inline fun <reified T : Any?> getArgsIfExist(thisRef: Fragment, key: String, noinline transformer: ((Any) -> T?)): T? =
+        thisRef.arguments[key]?.let(transformer)
+
+
+inline fun <reified T : Any?> getArgsIfExist(thisRef: SupportFragment, key: String, noinline transformer: ((Any) -> T?)): T? =
+        thisRef.arguments[key]?.let(transformer)
 
