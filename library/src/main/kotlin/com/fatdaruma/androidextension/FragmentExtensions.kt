@@ -27,6 +27,9 @@ import android.support.annotation.DimenRes
 import android.support.annotation.StringRes
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import kotlin.properties.Delegates
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 import android.support.v4.app.DialogFragment as SupportDialogFragment
 import android.support.v4.app.Fragment as SupportFragment
 
@@ -69,18 +72,85 @@ inline fun <reified T> Fragment.bindArgs(key: String, noinline transformer: ((An
 inline fun <reified T> SupportFragment.bindArgs(key: String, noinline transformer: ((Any) -> T) = { it as T }): Lazy<T> =
         lazy { getArgs(this, key, transformer) }
 
+inline fun <reified T: Any> Fragment.bindArgsIfExist(key: String, noinline transformer: ((Any) -> T?) = { it as? T }) : ReadWriteProperty<SupportFragment, T?> = object : ReadWriteProperty<SupportFragment, T?> {
+    private var isFirst: Boolean = true
+    private var cache: T? = null
 
-inline fun <reified T> Fragment.bindOptionArgs(key: String, noinline transformer: ((Any?) -> T?) = { it as? T }): Lazy<T?> =
-        lazy { getOptionArgs(this, key, transformer) }
+    override fun getValue(thisRef: SupportFragment, property: KProperty<*>): T? {
+        if (isFirst && cache == null) {
+            cache = getArgsIfExist(thisRef, key, transformer)
+        }
 
-inline fun <reified T> SupportFragment.bindOptionArgs(key: String, noinline transformer: ((Any?) -> T?) = { it as? T }): Lazy<T?> =
-        lazy { getOptionArgs(this, key, transformer) }
+        isFirst = false
 
-inline fun <reified T> Fragment.bindArgsIfExist(key: String, noinline transformer: ((Any) -> T?) = { it as? T }): Lazy<T?> =
-        lazy { getArgsIfExist(this, key, transformer) }
+        return cache
+    }
 
-inline fun <reified T> SupportFragment.bindArgsIfExist(key: String, noinline transformer: ((Any) -> T?) = { it as? T }): Lazy<T?> =
-        lazy { getArgsIfExist(this, key, transformer) }
+    override fun setValue(thisRef: SupportFragment, property: KProperty<*>, value: T?) {
+        cache = value
+        isFirst = false
+    }
+}
+
+inline fun <reified T: Any> SupportFragment.bindArgsIfExist(key: String, noinline transformer: ((Any) -> T?) = { it as? T }) : ReadWriteProperty<SupportFragment, T?> = object : ReadWriteProperty<SupportFragment, T?> {
+    private var isFirst: Boolean = true
+    private var cache: T? = null
+
+    override fun getValue(thisRef: SupportFragment, property: KProperty<*>): T? {
+        if (isFirst && cache == null) {
+            cache = getArgsIfExist(thisRef, key, transformer)
+        }
+
+        isFirst = false
+
+        return cache
+    }
+
+    override fun setValue(thisRef: SupportFragment, property: KProperty<*>, value: T?) {
+        cache = value
+        isFirst = false
+    }
+}
+
+inline fun <reified T: Any> Fragment.bindOptionArgs(key: String, noinline transformer: ((Any?) -> T?) = { it as? T }) : ReadWriteProperty<SupportFragment, T?> = object : ReadWriteProperty<SupportFragment, T?> {
+    private var isFirst: Boolean = true
+    private var cache: T? = null
+
+    override fun getValue(thisRef: SupportFragment, property: KProperty<*>): T? {
+        if (isFirst && cache == null) {
+            cache = getOptionArgs(thisRef, key, transformer)
+        }
+
+        isFirst = false
+
+        return cache
+    }
+
+    override fun setValue(thisRef: SupportFragment, property: KProperty<*>, value: T?) {
+        cache = value
+        isFirst = false
+    }
+}
+
+inline fun <reified T: Any> SupportFragment.bindOptionArgs(key: String, noinline transformer: ((Any?) -> T?) = { it as? T }) : ReadWriteProperty<SupportFragment, T?> = object : ReadWriteProperty<SupportFragment, T?> {
+    private var isFirst: Boolean = true
+    private var cache: T? = null
+
+    override fun getValue(thisRef: SupportFragment, property: KProperty<*>): T? {
+        if (isFirst && cache == null) {
+            cache = getOptionArgs(thisRef, key, transformer)
+        }
+
+        isFirst = false
+
+        return cache
+    }
+
+    override fun setValue(thisRef: SupportFragment, property: KProperty<*>, value: T?) {
+        cache = value
+        isFirst = false
+    }
+}
 
 
 fun Fragment.bindString(key: String): Lazy<String> = bindArgs(key)
@@ -157,4 +227,3 @@ inline fun <reified T : Any?> getArgsIfExist(thisRef: Fragment, key: String, noi
 
 inline fun <reified T : Any?> getArgsIfExist(thisRef: SupportFragment, key: String, noinline transformer: ((Any) -> T?)): T? =
         thisRef.arguments[key]?.let(transformer)
-

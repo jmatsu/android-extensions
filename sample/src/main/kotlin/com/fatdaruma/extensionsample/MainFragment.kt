@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.fatdaruma.androidextension.*
+import kotlin.properties.Delegates
 
 class MainFragment : Fragment() {
     companion object {
@@ -21,11 +22,14 @@ class MainFragment : Fragment() {
         const val primitiveValue = "primitiveValue"
         const val objectiveValue = "objectiveValue"
         const val resource = "resource"
+        const val bind_if_exist = "bind_if_exist"
+        const val bind_optional = "bind_optional"
     }
 
     private val primitiveValue: Int by bindArgs(Keys.primitiveValue)
     private val objectiveValue: String by bindArgs(Keys.objectiveValue)
     private val resource: String by bindResourceString(Keys.resource)
+    private val bind_if_exist: String? by bindArgsIfExist(Keys.bind_if_exist)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_main, container, false).apply {
