@@ -50,35 +50,94 @@ fun SupportFragment.invalidateOptionsMenu() {
     ActivityCompat.invalidateOptionsMenu(activity)
 }
 
-inline fun <reified T> T.showDialog(dialog: DialogFragment) where T : Fragment {
+fun <T> T.showDialog(dialog: DialogFragment) where T : Fragment {
     dialog.show(fragmentManager, dialog.javaClass.name)
 }
 
-inline fun <reified T> T.showDialog(dialog: SupportDialogFragment) where T : SupportFragment {
+fun <T> T.showDialog(dialog: SupportDialogFragment) where T : SupportFragment {
     dialog.show(childFragmentManager, dialog.javaClass.name)
 }
 
-inline fun <reified T> T.initArguments(f: Bundle.() -> Unit): T where T : Fragment = apply {
+fun <T> T.initArguments(f: Bundle.() -> Unit): T where T : Fragment = apply {
     arguments = Bundle().apply(f)
 }
 
-inline fun <reified T> T.initArguments(f: Bundle.() -> Unit): T where T : SupportFragment = apply {
+fun <T> T.initArguments(f: Bundle.() -> Unit): T where T : SupportFragment = apply {
     arguments = Bundle().apply(f)
 }
 
-inline fun <reified T> Fragment.bindArgs(key: String, noinline transformer: ((Any) -> T) = { it as T }): Lazy<T> =
-        lazy { getArgs(this, key, transformer) }
 
-inline fun <reified T> SupportFragment.bindArgs(key: String, noinline transformer: ((Any) -> T) = { it as T }): Lazy<T> =
-        lazy { getArgs(this, key, transformer) }
 
-inline fun <reified T: Any> Fragment.bindArgsIfExist(key: String, noinline transformer: ((Any) -> T?) = { it as? T }) : ReadWriteProperty<SupportFragment, T?> = object : ReadWriteProperty<SupportFragment, T?> {
+fun <T : Any> Fragment.bindArgs(key: String, transformer: ((Any) -> T) = { it as T }): ReadWriteProperty<Fragment, T> = CacheProperty(key, transformer)
+fun <T : Any> SupportFragment.bindArgs(key: String, transformer: ((Any) -> T) = { it as T }): ReadWriteProperty<SupportFragment, T> = CacheProperty(key, transformer)
+
+fun <T : Any> Fragment.bindArgsWithOptionKey(key: String, transformer: ((Any) -> T) = { it as T }): ReadWriteProperty<Fragment, T?> = OptionalValueCacheProperty(key, transformer)
+fun <T : Any> SupportFragment.bindArgsWithOptionKey(key: String, transformer: ((Any) -> T) = { it as T }): ReadWriteProperty<SupportFragment, T?> = OptionalValueCacheProperty(key, transformer)
+
+fun <T : Any> Fragment.bindArgs(key: String, initialValue: T, transformer: ((Any) -> T) = { it as T }): ReadWriteProperty<Fragment, T> = InitialValueCacheProperty(key, initialValue, transformer)
+fun <T : Any> SupportFragment.bindArgs(key: String, initialValue: T, transformer: ((Any) -> T) = { it as T }): ReadWriteProperty<SupportFragment, T> = InitialValueCacheProperty(key, initialValue, transformer)
+
+
+
+fun Fragment.bindString(key: String): ReadWriteProperty<Fragment, String> = bindArgs(key)
+fun SupportFragment.bindString(key: String): ReadWriteProperty<SupportFragment, String> = bindArgs(key)
+
+fun Fragment.bindBoolean(key: String): ReadWriteProperty<Fragment, Boolean> = bindArgs(key)
+fun SupportFragment.bindBoolean(key: String): ReadWriteProperty<SupportFragment, Boolean> = bindArgs(key)
+
+fun Fragment.bindInt(key: String): ReadWriteProperty<Fragment, Int> = bindArgs(key)
+fun SupportFragment.bindInt(key: String): ReadWriteProperty<SupportFragment, Int> = bindArgs(key)
+
+fun Fragment.bindLong(key: String): ReadWriteProperty<Fragment, Long> = bindArgs(key)
+fun SupportFragment.bindLong(key: String): ReadWriteProperty<SupportFragment, Long> = bindArgs(key)
+
+fun Fragment.bindDouble(key: String): ReadWriteProperty<Fragment, Double> = bindArgs(key)
+fun SupportFragment.bindDouble(key: String): ReadWriteProperty<SupportFragment, Double> = bindArgs(key)
+
+fun Fragment.bindFloat(key: String): ReadWriteProperty<Fragment, Float> = bindArgs(key)
+fun SupportFragment.bindFloat(key: String): ReadWriteProperty<SupportFragment, Float> = bindArgs(key)
+
+fun Fragment.bindByte(key: String): ReadWriteProperty<Fragment, Byte> = bindArgs(key)
+fun SupportFragment.bindByte(key: String): ReadWriteProperty<SupportFragment, Byte> = bindArgs(key)
+
+fun Fragment.bindShort(key: String): ReadWriteProperty<Fragment, Short> = bindArgs(key)
+fun SupportFragment.bindShort(key: String): ReadWriteProperty<SupportFragment, Short> = bindArgs(key)
+
+fun Fragment.bindChar(key: String): ReadWriteProperty<Fragment, Char> = bindArgs(key)
+fun SupportFragment.bindChar(key: String): ReadWriteProperty<SupportFragment, Char> = bindArgs(key)
+
+fun Fragment.bindCharSequence(key: String): ReadWriteProperty<Fragment, CharSequence> = bindArgs(key)
+fun SupportFragment.bindCharSequence(key: String): ReadWriteProperty<SupportFragment, CharSequence> = bindArgs(key)
+
+fun Fragment.bindBundle(key: String): ReadWriteProperty<Fragment, Bundle> = bindArgs(key)
+fun SupportFragment.bindBundle(key: String): ReadWriteProperty<SupportFragment, Bundle> = bindArgs(key)
+
+fun Fragment.bindParcelable(key: String): ReadWriteProperty<Fragment, Parcelable> = bindArgs(key)
+fun SupportFragment.bindParcelable(key: String): ReadWriteProperty<SupportFragment, Parcelable> = bindArgs(key)
+
+fun Fragment.bindResourceString(key: String): ReadWriteProperty<Fragment, String> = bindArgs(key) { getString(it as Int) }
+fun SupportFragment.bindResourceString(key: String): ReadWriteProperty<SupportFragment, String> = bindArgs(key) { getString(it as Int) }
+
+fun Fragment.bindResourceColor(key: String): ReadWriteProperty<Fragment, Int> = bindArgs(key) { getColor(it as Int) }
+fun SupportFragment.bindResourceColor(key: String): ReadWriteProperty<SupportFragment, Int> = bindArgs(key) { getColor(it as Int) }
+
+fun Fragment.bindResourceDimensionPixelSize(key: String): ReadWriteProperty<Fragment, Int> = bindArgs(key) { getDimensionPixelSize(it as Int) }
+fun SupportFragment.bindResourceDimensionPixelSize(key: String): ReadWriteProperty<SupportFragment, Int> = bindArgs(key) { getDimensionPixelSize(it as Int) }
+
+
+
+
+private class CacheProperty<T : Any, in R>(private val key: String, private val transformer: ((Any) -> T)) : ReadWriteProperty<R, T> {
     private var isFirst: Boolean = true
-    private var cache: T? = null
+    private var cache: T by Delegates.notNull()
 
-    override fun getValue(thisRef: SupportFragment, property: KProperty<*>): T? {
-        if (isFirst && cache == null) {
-            cache = getArgsIfExist(thisRef, key, transformer)
+    override fun getValue(thisRef: R, property: KProperty<*>): T {
+        if (isFirst) {
+            when (thisRef) {
+                is SupportFragment -> cache = transformer(thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key"))
+                is Fragment -> cache = transformer(thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key"))
+                else -> throw ClassCastException("$thisRef Cannot be allowed")
+            }
         }
 
         isFirst = false
@@ -86,19 +145,23 @@ inline fun <reified T: Any> Fragment.bindArgsIfExist(key: String, noinline trans
         return cache
     }
 
-    override fun setValue(thisRef: SupportFragment, property: KProperty<*>, value: T?) {
+    override fun setValue(thisRef: R, property: KProperty<*>, value: T) {
         cache = value
         isFirst = false
     }
 }
 
-inline fun <reified T: Any> SupportFragment.bindArgsIfExist(key: String, noinline transformer: ((Any) -> T?) = { it as? T }) : ReadWriteProperty<SupportFragment, T?> = object : ReadWriteProperty<SupportFragment, T?> {
+private class OptionalValueCacheProperty<T : Any, in R>(private val key: String, private val transformer: ((Any) -> T)) : ReadWriteProperty<R, T?> {
     private var isFirst: Boolean = true
     private var cache: T? = null
 
-    override fun getValue(thisRef: SupportFragment, property: KProperty<*>): T? {
-        if (isFirst && cache == null) {
-            cache = getArgsIfExist(thisRef, key, transformer)
+    override fun getValue(thisRef: R, property: KProperty<*>): T? {
+        if (isFirst) {
+            when (thisRef) {
+                is SupportFragment -> cache = thisRef.arguments[key]?.let(transformer)
+                is Fragment -> cache = thisRef.arguments[key]?.let(transformer)
+                else -> throw ClassCastException("$thisRef Cannot be allowed")
+            }
         }
 
         isFirst = false
@@ -106,19 +169,23 @@ inline fun <reified T: Any> SupportFragment.bindArgsIfExist(key: String, noinlin
         return cache
     }
 
-    override fun setValue(thisRef: SupportFragment, property: KProperty<*>, value: T?) {
+    override fun setValue(thisRef: R, property: KProperty<*>, value: T?) {
         cache = value
         isFirst = false
     }
 }
 
-inline fun <reified T: Any> Fragment.bindOptionArgs(key: String, noinline transformer: ((Any?) -> T?) = { it as? T }) : ReadWriteProperty<SupportFragment, T?> = object : ReadWriteProperty<SupportFragment, T?> {
+private class InitialValueCacheProperty<T : Any, in R>(private val key: String, initialValue: T, private val transformer: ((Any) -> T)) : ReadWriteProperty<R, T> {
     private var isFirst: Boolean = true
-    private var cache: T? = null
+    private var cache: T = initialValue
 
-    override fun getValue(thisRef: SupportFragment, property: KProperty<*>): T? {
-        if (isFirst && cache == null) {
-            cache = getOptionArgs(thisRef, key, transformer)
+    override fun getValue(thisRef: R, property: KProperty<*>): T {
+        if (isFirst) {
+            when (thisRef) {
+                is SupportFragment -> thisRef.arguments[key]?.let(transformer)?.let { cache = it }
+                is Fragment -> thisRef.arguments[key]?.let(transformer)?.let { cache = it }
+                else -> throw ClassCastException("$thisRef Cannot be allowed")
+            }
         }
 
         isFirst = false
@@ -126,104 +193,8 @@ inline fun <reified T: Any> Fragment.bindOptionArgs(key: String, noinline transf
         return cache
     }
 
-    override fun setValue(thisRef: SupportFragment, property: KProperty<*>, value: T?) {
+    override fun setValue(thisRef: R, property: KProperty<*>, value: T) {
         cache = value
         isFirst = false
     }
 }
-
-inline fun <reified T: Any> SupportFragment.bindOptionArgs(key: String, noinline transformer: ((Any?) -> T?) = { it as? T }) : ReadWriteProperty<SupportFragment, T?> = object : ReadWriteProperty<SupportFragment, T?> {
-    private var isFirst: Boolean = true
-    private var cache: T? = null
-
-    override fun getValue(thisRef: SupportFragment, property: KProperty<*>): T? {
-        if (isFirst && cache == null) {
-            cache = getOptionArgs(thisRef, key, transformer)
-        }
-
-        isFirst = false
-
-        return cache
-    }
-
-    override fun setValue(thisRef: SupportFragment, property: KProperty<*>, value: T?) {
-        cache = value
-        isFirst = false
-    }
-}
-
-
-fun Fragment.bindString(key: String): Lazy<String> = bindArgs(key)
-fun SupportFragment.bindString(key: String): Lazy<String> = bindArgs(key)
-
-fun Fragment.bindBoolean(key: String): Lazy<Boolean> = bindArgs(key)
-fun SupportFragment.bindBoolean(key: String): Lazy<Boolean> = bindArgs(key)
-
-fun Fragment.bindInt(key: String): Lazy<Int> = bindArgs(key)
-fun SupportFragment.bindInt(key: String): Lazy<Int> = bindArgs(key)
-
-fun Fragment.bindLong(key: String): Lazy<Long> = bindArgs(key)
-fun SupportFragment.bindLong(key: String): Lazy<Long> = bindArgs(key)
-
-fun Fragment.bindDouble(key: String): Lazy<Double> = bindArgs(key)
-fun SupportFragment.bindDouble(key: String): Lazy<Double> = bindArgs(key)
-
-fun Fragment.bindFloat(key: String): Lazy<Float> = bindArgs(key)
-fun SupportFragment.bindFloat(key: String): Lazy<Float> = bindArgs(key)
-
-fun Fragment.bindByte(key: String): Lazy<Byte> = bindArgs(key)
-fun SupportFragment.bindByte(key: String): Lazy<Byte> = bindArgs(key)
-
-fun Fragment.bindShort(key: String): Lazy<Short> = bindArgs(key)
-fun SupportFragment.bindShort(key: String): Lazy<Short> = bindArgs(key)
-
-fun Fragment.bindChar(key: String): Lazy<Char> = bindArgs(key)
-fun SupportFragment.bindChar(key: String): Lazy<Char> = bindArgs(key)
-
-fun Fragment.bindCharSequence(key: String): Lazy<CharSequence> = bindArgs(key)
-fun SupportFragment.bindCharSequence(key: String): Lazy<CharSequence> = bindArgs(key)
-
-fun Fragment.bindBundle(key: String): Lazy<Bundle> = bindArgs(key)
-fun SupportFragment.bindBundle(key: String): Lazy<Bundle> = bindArgs(key)
-
-fun Fragment.bindParcelable(key: String): Lazy<Parcelable> = bindArgs(key)
-fun SupportFragment.bindParcelable(key: String): Lazy<Parcelable> = bindArgs(key)
-
-fun Fragment.bindResourceString(key: String): Lazy<String> =
-        lazy { getString(getArgs(this, key, { it as Int })) }
-
-fun SupportFragment.bindResourceString(key: String): Lazy<String> =
-        lazy { getString(getArgs(this, key, { it as Int })) }
-
-fun Fragment.bindResourceColor(key: String): Lazy<Int> =
-        lazy { getColor(getArgs(this, key, { it as Int })) }
-
-fun SupportFragment.bindResourceColor(key: String): Lazy<Int> =
-        lazy { getColor(getArgs(this, key, { it as Int })) }
-
-fun Fragment.bindResourceDimensionPixelSize(key: String): Lazy<Int> =
-        lazy { getDimensionPixelSize(getArgs(this, key, { it as Int })) }
-
-fun SupportFragment.bindResourceDimensionPixelSize(key: String): Lazy<Int> =
-        lazy { getDimensionPixelSize(getArgs(this, key, { it as Int })) }
-
-inline fun <reified T : Any?> getArgs(thisRef: Fragment, key: String, noinline transformer: ((Any) -> T)): T =
-        transformer(thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key"))
-
-
-inline fun <reified T : Any?> getArgs(thisRef: SupportFragment, key: String, noinline transformer: ((Any) -> T)): T =
-        transformer(thisRef.arguments[key] ?: throw IllegalArgumentException("Arguments must have key - $key"))
-
-inline fun <reified T : Any?> getOptionArgs(thisRef: Fragment, key: String, noinline transformer: ((Any?) -> T?)): T? =
-        transformer(thisRef.arguments[key])
-
-
-inline fun <reified T : Any?> getOptionArgs(thisRef: SupportFragment, key: String, noinline transformer: ((Any?) -> T?)): T? =
-        transformer(thisRef.arguments[key])
-
-inline fun <reified T : Any?> getArgsIfExist(thisRef: Fragment, key: String, noinline transformer: ((Any) -> T?)): T? =
-        thisRef.arguments[key]?.let(transformer)
-
-
-inline fun <reified T : Any?> getArgsIfExist(thisRef: SupportFragment, key: String, noinline transformer: ((Any) -> T?)): T? =
-        thisRef.arguments[key]?.let(transformer)
