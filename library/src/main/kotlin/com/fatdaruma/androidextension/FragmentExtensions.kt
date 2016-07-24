@@ -50,11 +50,11 @@ fun SupportFragment.invalidateOptionsMenu() {
     ActivityCompat.invalidateOptionsMenu(activity)
 }
 
-fun <T> T.showDialog(dialog: DialogFragment) where T : Fragment {
+fun Fragment.showDialog(dialog: DialogFragment) {
     dialog.show(fragmentManager, dialog.javaClass.name)
 }
 
-fun <T> T.showDialog(dialog: SupportDialogFragment) where T : SupportFragment {
+fun SupportFragment.showDialog(dialog: SupportDialogFragment) {
     dialog.show(childFragmentManager, dialog.javaClass.name)
 }
 
@@ -67,7 +67,6 @@ fun <T> T.initArguments(f: Bundle.() -> Unit): T where T : SupportFragment = app
 }
 
 
-
 fun <T : Any> Fragment.bindArgs(key: String, transformer: ((Any) -> T) = { it as T }): ReadWriteProperty<Fragment, T> = CacheProperty(key, transformer)
 fun <T : Any> SupportFragment.bindArgs(key: String, transformer: ((Any) -> T) = { it as T }): ReadWriteProperty<SupportFragment, T> = CacheProperty(key, transformer)
 
@@ -76,7 +75,6 @@ fun <T : Any> SupportFragment.bindArgsWithOptionKey(key: String, transformer: ((
 
 fun <T : Any> Fragment.bindArgs(key: String, initialValue: T, transformer: ((Any) -> T) = { it as T }): ReadWriteProperty<Fragment, T> = InitialValueCacheProperty(key, initialValue, transformer)
 fun <T : Any> SupportFragment.bindArgs(key: String, initialValue: T, transformer: ((Any) -> T) = { it as T }): ReadWriteProperty<SupportFragment, T> = InitialValueCacheProperty(key, initialValue, transformer)
-
 
 
 fun Fragment.bindString(key: String): ReadWriteProperty<Fragment, String> = bindArgs(key)
@@ -123,8 +121,6 @@ fun SupportFragment.bindResourceColor(key: String): ReadWriteProperty<SupportFra
 
 fun Fragment.bindResourceDimensionPixelSize(key: String): ReadWriteProperty<Fragment, Int> = bindArgs(key) { getDimensionPixelSize(it as Int) }
 fun SupportFragment.bindResourceDimensionPixelSize(key: String): ReadWriteProperty<SupportFragment, Int> = bindArgs(key) { getDimensionPixelSize(it as Int) }
-
-
 
 
 private class CacheProperty<T : Any, in R>(private val key: String, private val transformer: ((Any) -> T)) : ReadWriteProperty<R, T> {
