@@ -36,7 +36,7 @@ fun SupportFragment.getString(@StringRes resId: Int): String = resources.getStri
 fun Fragment.getString(@StringRes resId: Int, vararg args: Any): String = resources.getString(resId, *args)
 fun SupportFragment.getString(@StringRes resId: Int, vararg args: Any): String = resources.getString(resId, *args)
 
-fun Fragment.getColor(@ColorRes resId: Int): Int = ContextCompat.getColor(context, resId)
+fun Fragment.getColor(@ColorRes resId: Int): Int = ContextCompat.getColor(activity, resId)
 fun SupportFragment.getColor(@ColorRes resId: Int): Int = ContextCompat.getColor(context, resId)
 
 fun Fragment.getDimensionPixelSize(@DimenRes resId: Int): Int = resources.getDimensionPixelSize(resId)
