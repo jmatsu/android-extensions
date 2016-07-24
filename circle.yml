@@ -1,5 +1,9 @@
 machine:
+  java:
+    version: oraclejdk8
   environment:
+    ANDROID_HOME: /usr/local/android-sdk-linux
+    PATH: $ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
     TERM: "dumb"
     ADB_INSTALL_TIMEOUT: "10"
     GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:MaxMetaspaceSize=128m -XX:+HeapDumpOnOutOfMemoryError"'
