@@ -1,0 +1,30 @@
+machine:
+  java:
+    version: oraclejdk8
+  environment:
+    ANDROID_HOME: /usr/local/android-sdk-linux
+    PATH: $ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
+    TERM: "dumb"
+    ADB_INSTALL_TIMEOUT: "10"
+    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:MaxMetaspaceSize=128m -XX:+HeapDumpOnOutOfMemoryError"'
+    _JAVA_OPTIONS: "-Xmx800m -XX:MaxMetaspaceSize=128m"
+  post:
+    - sudo service mysql stop
+    - sudo service postgresql stop
+
+dependencies:
+  pre:
+    - echo y | android update sdk --no-ui --all --filter tool,extra-android-support,extra-google-m2repository,android-23
+    - echo y | android update sdk --no-ui --all --filter build-tools-23.0.2
+
+test:
+  override:
+    - emulator -avd circleci-android22 -no-audio -no-window:
+        background: true
+        parallel: true
+    - circle-android wait-for-boot
+    - sleep 30
+    - adb shell input keyevent 82
+    - ./gradlew :sample:connectedAndroidTest -PdisablePreDex
+    - cp -r sample/build/outputs $CIRCLE_ARTIFACTS
+    - cp -r sample/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS

@@ -15,7 +15,6 @@ android {
         targetSdkVersion baseSdkVersion
         versionCode versionMajor * 100 + versionMinor * 10 + versionPatch
         versionName "$versionMajor.$versionMinor.$versionPatch"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -25,7 +24,6 @@ android {
         }
     }
 
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
@@ -33,7 +31,6 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
-        test.java.srcDirs += 'src/test/kotlin'
     }
 
     packagingOptions {
@@ -45,10 +42,4 @@ android {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "com.android.support:appcompat-v7:$supportLibVersion"
-
-    // test compiles
-    testCompile "junit:junit:$junitVersion"
-    testCompile "org.robolectric:robolectric:$robolectricVersion"
-    testCompile "org.mockito:mockito-all:$mockitoVersion"
-    testCompile "com.taroid.knit:knit:$knitVersion"
 }
