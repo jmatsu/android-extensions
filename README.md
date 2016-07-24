@@ -1,5 +1,7 @@
 # Kotlin Extensions for Android
 
+[![CircleCI](https://circleci.com/gh/jmatsu/android-extensions/tree/master.svg?style=svg)](https://circleci.com/gh/jmatsu/android-extensions/tree/master)
+
 ## Usage
 
 See [samples](https://github.com/jmatsu/android-extensions/blob/master/sample/src/main/kotlin/com/fatdaruma/extensionsample/MainFragment.kt).
