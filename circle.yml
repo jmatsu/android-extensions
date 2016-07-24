@@ -1,24 +1,27 @@
 machine:
   environment:
-    PATH: "~/$CIRCLE_PROJECT_REPONAME/gradle-2.12/bin:$PATH"
     TERM: "dumb"
     ADB_INSTALL_TIMEOUT: "10"
-    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:MaxMetaspaceSize=128m -XX:+HeapDumpOnOutOfMemoryError"'
+    _JAVA_OPTIONS: "-Xmx800m -XX:MaxMetaspaceSize=128m"
+  post:
+    - sudo service mysql stop
+    - sudo service postgresql stop
 
 dependencies:
   pre:
-    - wget "https://services.gradle.org/distributions/gradle-2.12-bin.zip"; unzip gradle-2.12-bin.zip
     - echo y | android update sdk --no-ui --all --filter tool,extra-android-m2repository,extra-android-support,extra-google-google_play_services,extra-google-m2repository,android-23
     - echo y | android update sdk --no-ui --all --filter build-tools-23.0.2
 
 test:
   override:
+    - ./gradlew --full-stacktrace check
     - emulator -avd circleci-android22 -no-audio -no-window:
         background: true
         parallel: true
     - circle-android wait-for-boot
     - sleep 30
     - adb shell input keyevent 82
-    - ./gradlew connectedAndroidTest -PdisablePreDex
+    - ./gradlew :sample:connectedAndroidTest -PdisablePreDex
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
     - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
